@@ -1,0 +1,929 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<!--
+  Distribution Redux : English (source language)
+
+  NOTE TO EDITORS: an XML comment may not contain two hyphens in a row. It is a
+  parse error and the whole file is then ignored. Attribute VALUES below are fine
+  and several deliberately contain a double hyphen; keep them exactly as they are.
+
+  HOW TO ADD A LANGUAGE
+    1. Copy this file to translations/translation_<code>.xml
+       Codes FS25 uses: br cs ct cz da de ea en es fc fi fr hu id it jp kr nl no
+                        pl pt ro ru sv tr uk vi
+    2. Translate ONLY the text="…" values. Never change a name="..." key.
+    3. Open a pull request. You do not need to translate everything: any key you
+       leave out falls back to English, so a partial file is welcome.
+
+  RULES THAT MATTER
+    * Keys ending _tt are TOOLTIPS. They are long and wrap freely, so length is
+      not a problem there.
+    * Keys starting dr_col_ are TABLE COLUMN HEADERS in a fixed width cell. The
+      character budget is given in a comment above each block. A header that
+      overruns is CLIPPED, which has caused a real bug before: an output mode
+      reading "Distribute + S..." looked like plain Distribute and hid a building
+      that was selling everything. Prefer a short word or an accepted abbreviation.
+    * Keys starting dr_btn_ are BUTTONS sharing one footer bar. Keep them short.
+    * "L" is litres and "kL" kilolitres. Volumes are formatted in code, not here.
+    * Leave XML entities alone: &amp; is an ampersand, &quot; a double quote.
+-->
+<l10n>
+    <texts>
+
+        <!-- ================= keybindings (shown in Options > Controls) ================= -->
+        <text name="input_DISTREDUX_OPEN_DIALOG" text="配送設定（最寄りの施設）" />
+        <text name="input_DISTREDUX_OPEN_MANAGER" text="Distribution Reduxメニューを開く" />
+        <text name="dr_input_openManager" text="配送メニュー" />
+
+        <!-- ================= TEMPORARY: money-type probe =================
+             Titles handed to MoneyType.register. If the base finances screen renders a
+             row per registered TYPE, one of these is what that row will read; if it
+             renders per persisted BUCKET, neither appears and the money shows under an
+             existing row instead. The two are worded differently ON PURPOSE so the log
+             is not needed to tell which registration produced a row.
+             DELETE BOTH when the probe goes.                                          -->
+
+        <!-- ================= page + dialog titles ================= -->
+        <text name="dr_title_overview"        text="概要" />
+        <text name="dr_title_productions"     text="Distribution Redux - 生産施設" />
+        <text name="dr_title_routing"         text="Distribution Redux - 配送ルート" />
+        <text name="dr_title_storage"         text="Distribution Redux - 保管施設" />
+        <text name="dr_title_husbandry"       text="Distribution Redux - 家畜施設" />
+        <text name="dr_title_markets"         text="Distribution Redux - 販売所" />
+        <text name="dr_title_help"            text="ヘルプ" />
+        <text name="dr_tab_distribution" text="配送"/>
+        <text name="dr_tab_productions" text="生産施設" />
+        <text name="dr_tab_storage"     text="保管施設" />
+        <text name="dr_tab_husbandry"   text="家畜施設" />
+
+        <!-- The ROUTING graph tab. Column headings are UPPERCASE and sit over columns of
+             110 to 220 design px, so they clip rather than wrap: keep them to about 12
+             characters. dr_rg_hint takes the two product names in order. -->
+        <text name="dr_rg_hdrSources"         text="供給元" />
+        <text name="dr_rg_hdrInputs"          text="入力" />
+        <text name="dr_rg_hdrBuilding"        text="施設" />
+        <text name="dr_rg_hdrOutputs"         text="出力" />
+        <text name="dr_rg_hdrDests"           text="供給先" />
+        <text name="dr_rg_farmWide"           text="農場" />
+        <text name="dr_rg_hint"               text="供給元：%s   供給先：%s" />
+        <text name="dr_rg_pickBuilding"       text="施設を選択" />
+        <text name="dr_rg_used"               text="使用量 %s" />
+        <text name="dr_rg_made"               text="生産量 %s" />
+        <text name="dr_rg_holds"              text="保管量 %s" />
+        <text name="dr_rg_clearOrder"         text="順序をクリア" />
+        <text name="dr_rg_togBlock"      text="クリックしてこの接続をブロック" />
+        <text name="dr_rg_togAllow"      text="クリックしてこの接続を許可" />
+        <text name="dr_rg_jump"          text="ダブルクリックして %s を開く" />
+        <text name="dr_rg_jumpRg"        text="ダブルクリックして %s の配送先を設定" />
+        <!-- The CONTROL STRIP. dr_rg_range takes first, last, total; dr_rg_ctlIn / ctlOut take
+             the product name. Keep them short: the strip tiles to 1480px and clips rather than
+             wraps, and German runs about 30% longer (5.60). -->
+        <text name="dr_rg_ctlField"      text="%s  -  %s" />
+        <text name="dr_rg_lblMaxFill"    text="最大充填量" />
+        <text name="dr_rg_lblTarget"     text="充填目標" />
+        <text name="dr_rg_lblReserve"    text="確保量" />
+        <text name="dr_rg_range"         text="%d～%d / %d（スクロール）" />
+        <text name="dr_rg_hiddenN"       text="+%d件をブロック" />
+        <text name="dr_rg_targetOff"     text="オフ" />
+        <text name="dr_rg_loopSkipped"   text="%d件をスキップ（循環が発生するため）" />
+        <!-- The strip's three TYPED fields. The placeholders sit inside a 138px box at 11px,
+             so about 24 characters. dr_rg_nodeIn is an input node's third line and dr_rg_nodeRes
+             an output's, both in a 98px column at 9px: keep them to about 20 characters. -->
+        <text name="dr_rg_hintLitres"    text="クリックしてリットル数を設定" />
+        <text name="dr_rg_nodeIn"        text="最大 %s 目標 %s" />
+        <text name="dr_rg_nodeRes"       text="確保 %s" />
+        <text name="dr_rg_blockAllSrc"   text="すべての供給元をブロック" />
+        <text name="dr_rg_allowAllSrc"   text="すべての供給元を許可" />
+        <text name="dr_rg_blockAllDst"   text="すべての供給先をブロック" />
+        <text name="dr_rg_allowAllDst"   text="すべての供給先を許可" />
+        <text name="dr_rg_blockAllIn"    text="すべての入力をブロック" />
+        <text name="dr_rg_allowAllIn"    text="すべての入力を許可" />
+        <text name="dr_rg_blockAllOut"   text="すべての出力をブロック" />
+        <text name="dr_rg_allowAllOut"   text="すべての出力を許可" />
+        <text name="dr_rg_nInBlocked"    text="入力 %d 件をブロック" />
+        <text name="dr_rg_nInAllowed"    text="入力 %d 件を許可" />
+        <text name="dr_rg_nOutBlocked"   text="出力接続 %d 件をブロック" />
+        <text name="dr_rg_nOutAllowed"   text="出力接続 %d 件を許可" />
+        <!-- The grey prompt and the grey complaint sit INSIDE a 140px field at 12px,
+             so about 22 characters. dr_rg_hintTarget says "Off" because an empty target
+             field IS Off, which is a real setting and not an absence. -->
+        <text name="dr_rg_hintTarget"    text="オフ - クリックして設定" />
+        <text name="dr_rg_badRes"        text="容量超過" />
+        <!-- The building node's storage rows, which is what the two tank columns used to
+             carry. Two figures each: held then capacity. -->
+        <text name="dr_rg_bldStoIn"      text="入力  %s / %s" />
+        <text name="dr_rg_bldStoOut"     text="出力  %s / %s" />
+        <text name="dr_rg_bldTanks"      text="タンク %d 基" />
+        <text name="dr_rg_capClamped"    text="タンク容量で上限設定：%s" />
+        <text name="dr_rg_blockedNoSet"  text="この製品はブロックされています" />
+        <text name="dr_tab_markets"     text="販売所" />
+        <text name="dr_title_settings"        text="設定" />
+        <text name="dr_title_advanced"        text="詳細設定" />
+        <text name="dr_title_advancedInputs"  text="詳細入力設定" />
+        <text name="dr_title_spawnPallets"    text="パレットを生成" />
+
+        <!-- ================= building-list headers (left column, ~40 chars) ================= -->
+        <text name="dr_col_buildings"     text="施設" />
+        <text name="dr_col_husbandries"   text="家畜施設" />
+        <text name="dr_col_markets"       text="販売所" />
+        <text name="dr_col_productions"   text="生産施設" />
+
+        <!-- ================= selector labels above the tables ================= -->
+        <text name="dr_lbl_timescale"        text="集計期間" />
+        <text name="dr_lbl_filterBy"         text="フィルター" />
+        <text name="dr_lbl_show"             text="表示対象" />
+        <text name="dr_lbl_grouping"         text="グループ化" />
+        <text name="dr_lbl_modeKeys" text="X / Z：選択中の出力モードを切り替え" />
+        <text name="dr_lbl_sellingOff"       text="売却がオフです - これらの行の設定にかかわらず、すべての販売所で到着時に売却されます" />
+        <text name="dr_lbl_overviewPointer"  text="詳細な内訳とサプライチェーンは「概要」タブを参照" />
+
+        <!-- ================= Overview: FLOW view column headers =================
+             Budget roughly 10 to 16 characters each; these sit at 11px in narrow
+             cells. "(EXP.)" is short for "expected", the recipe's target figure. -->
+        <text name="dr_col_building"      text="施設" />
+        <text name="dr_col_product"       text="製品" />
+        <text name="dr_col_received"      text="受入量" />
+        <text name="dr_col_loaded"        text="積込量" />
+        <text name="dr_col_consumedExp"   text="消費量（予測）" />
+        <text name="dr_col_unloaded"      text="荷下ろし量" />
+        <text name="dr_col_producedExp"   text="生産量（予測）" />
+        <text name="dr_col_distributed"   text="配送量" />
+        <text name="dr_col_sold"          text="売却量" />
+        <text name="dr_col_storedMoved"   text="保管／移動量" />
+        <text name="dr_col_distrCost"     text="配送費" />
+
+        <!-- ================= Overview: SETTINGS view column headers =================
+             Same budget as above. DEST means "active of total destinations" and is
+             the narrowest cell on the page, about 6 characters. Abbreviate freely. -->
+        <text name="dr_col_storageType"   text="保管方式" />
+        <text name="dr_col_maxInPctL"     text="受入上限（% - L）" />
+        <text name="dr_col_heldOfMax"     text="保管量／上限" />
+        <text name="dr_col_inStatus"      text="入力状態" />
+        <text name="dr_col_lines"         text="生産ライン" />
+        <text name="dr_col_outMode"       text="出力モード" />
+        <text name="dr_col_reserve"       text="確保量" />
+        <text name="dr_col_priority"      text="優先度" />
+        <text name="dr_col_dest"          text="供給先" />
+        <text name="dr_col_outStatus"     text="出力状態" />
+
+        <!-- ================= building-tab table headers =================
+             Shared by Silos / Animal Husbandry / Markets / Productions. -->
+        <text name="dr_col_incomingProducts"  text="受入製品" />
+        <text name="dr_col_incomingMaterials" text="投入材料" />
+        <text name="dr_col_outgoingProducts"  text="出荷製品" />
+        <text name="dr_col_distribution"      text="配送" />
+        <text name="dr_col_consumed"          text="消費量" />
+        <text name="dr_col_produced"          text="生産量" />
+        <text name="dr_col_outputMode"        text="出力モード" />
+        <text name="dr_col_status"            text="状態" />
+        <text name="dr_col_products"          text="製品" />
+        <text name="dr_pct_lessThanOne"       text="&lt;1%" />
+        <text name="dr_btn_advIn"             text="詳細入力" />
+        <text name="dr_btn_advOut"            text="詳細出力" />
+        <text name="dr_col_statusInOut"       text="状態（入力／出力）" />
+        <text name="dr_status_short_recv"     text="受入" />
+        <text name="dr_status_short_send"     text="送出" />
+        <text name="dr_status_short_sold"     text="売却済み" />
+        <text name="dr_status_short_idle"     text="待機" />
+        <text name="dr_status_short_blocked"  text="ブロック中" />
+        <text name="dr_status_short_none"     text="-" />
+        <text name="dr_col_productionLines"   text="生産ライン" />
+        <text name="dr_col_lineInput"      text="入力" />
+        <text name="dr_col_lineOutput"     text="出力" />
+        <!-- Hover tooltips on the throughput glyph at the left of each production line row. PARALLEL and
+             SERIES are the two ways a production point divides its rated speed across the lines that are
+             switched on: in parallel each line runs at its own full rate, in series they share one budget
+             between them (so two lines each go at about half speed). Free-length - these are tooltips, not
+             table cells, so they are not clipped. -->
+        <text name="dr_tip_parallel"       text="並列（Parallel）- 各ラインがそれぞれ最大速度で稼働" />
+        <text name="dr_tip_series"         text="直列（Series）- 各ラインが共通の処理能力を分け合う" />
+        <!-- "/mo" = per month. The figure is the line's monthly target. -->
+        <text name="dr_col_targetMo"          text="目標／月" />
+
+        <!-- ================= Advanced Outputs dialog ================= -->
+        <text name="dr_col_demands"   text="需要" />
+        <text name="dr_col_storage"   text="保管施設" />
+        <text name="dr_col_distance"  text="距離" />
+        <text name="dr_col_order"     text="順序" />
+
+        <!-- ================= Advanced Inputs dialog ================= -->
+        <text name="dr_col_incomingProduct" text="受入製品" />
+        <text name="dr_col_type"            text="種類" />
+        <text name="dr_col_held"            text="保管量" />
+        <text name="dr_col_maxIn"           text="受入上限" />
+        <text name="dr_col_available"       text="利用可能" />
+        <text name="dr_col_fillTarget"      text="充填目標" />
+        <!-- Lower table on the same dialog: every building that could supply the SELECTED input.
+             The first header doubles as the section title, so keep it readable as a heading.
+             Budget: POTENTIAL SOURCES 500px, RANGE 110px, HELD is reused from above, STATUS 226px. -->
+        <text name="dr_col_potentialSources" text="供給元候補" />
+        <text name="dr_col_range"            text="範囲" />
+
+        <!-- ================= buttons =================
+             These share one footer bar, so every extra character squeezes its
+             neighbours. Aim for the length of the English or shorter. -->
+        <text name="dr_btn_priorityUp"    text="優先度を上げる" />
+        <text name="dr_btn_priorityDown"  text="優先度を下げる" />
+        <text name="dr_btn_toggle"        text="切り替え" />
+        <text name="dr_btn_clear"         text="クリア" />
+        <text name="dr_btn_blockAll"      text="すべてブロック" />
+        <text name="dr_btn_reserveDown"   text="確保量を減らす" />
+        <text name="dr_btn_reserveUp"     text="確保量を増やす" />
+        <text name="dr_lbl_reserveLitres" text="確保量：" />
+        <text name="dr_btn_maxDown"       text="上限を減らす" />
+        <text name="dr_btn_maxUp"         text="上限を増やす" />
+        <text name="dr_btn_targetDown"    text="目標を減らす" />
+        <text name="dr_btn_targetUp"      text="目標を増やす" />
+        <text name="dr_btn_block"         text="ブロック" />
+        <text name="dr_btn_spawn"         text="生成" />
+        <text name="dr_btn_cancel"        text="キャンセル" />
+        <text name="dr_btn_close"         text="閉じる" />
+
+        <!-- ================= FOOTER BUTTONS (set from Lua) =================
+             Same footer bar as the dr_btn_ keys above, same length pressure. Sell Timing is a
+             FORMAT string: %s is the current timing ("Best price" / "Immediate"). -->
+        <text name="dr_btn_advanced"         text="詳細設定" />
+        <text name="dr_btn_sellTiming"       text="売却タイミング" />
+        <text name="dr_btn_sellTimingOff"    text="売却タイミング：売却はオフ" />
+        <text name="dr_btn_sellTimingValue"  text="売却タイミング：%s" />
+        <text name="dr_btn_toggleLine"       text="生産ラインを切り替え" />
+        <text name="dr_btn_showSettings"     text="設定を表示" />
+        <text name="dr_btn_showFlows"        text="流量を表示" />
+        <text name="dr_btn_refresh"          text="更新" />
+        <text name="dr_btn_advancedOutputs"  text="詳細出力設定" />
+        <text name="dr_btn_activate"         text="有効化" />
+        <text name="dr_btn_activateAll"      text="すべて有効化" />
+        <text name="dr_btn_allow"            text="許可" />
+        <text name="dr_btn_allowAll"         text="すべて許可" />
+
+        <!-- ================= TIMESCALE SELECTOR =================
+             One in-game hour is one distribution cycle, which is why the building tabs spell it
+             out; the Overview's column is narrower and just says "Hour". -->
+        <text name="dr_period_hourLong" text="周期（時間）" />
+        <text name="dr_period_hour"     text="時間" />
+        <text name="dr_period_month"    text="月" />
+        <text name="dr_period_year"     text="年" />
+
+        <!-- ================= OVERVIEW SELECTORS =================
+             "End product (full chain)" shows every building feeding one finished product, back
+             through the whole supply chain. Grouping collapses buildings of the same type into
+             one summed row, labelled e.g. "Bakery x2". -->
+        <text name="dr_filter_nothing"    text="指定なし（すべて表示）" />
+        <text name="dr_filter_building"   text="施設" />
+        <text name="dr_filter_product"    text="製品" />
+        <text name="dr_filter_endProduct" text="最終製品（全工程）" />
+        <text name="dr_group_off"         text="オフ（施設ごとに1行）" />
+        <text name="dr_group_on"          text="オン（同種の施設をまとめる）" />
+
+        <!-- ================= OVERVIEW SHORT STATUS =================
+             The same three states as dr_status_* above, but the Overview's column is 140px and
+             its header already says IN or OUT, so the qualifier is dropped. Keep these SHORT. -->
+        <text name="dr_statusShort_receiving" text="受入中" />
+        <text name="dr_statusShort_sending"   text="送出中" />
+        <text name="dr_statusShort_idle"      text="待機" />
+        <text name="dr_statusShort_blocked"   text="ブロック中" />
+
+        <!-- ================= STORAGE TYPE =================
+             Pooled: one tank shared by several products. Individual: a separate tank per
+             product. Shown in the Advanced Inputs dialog and the Overview settings view, which
+             deliberately use identical wording. -->
+        <text name="dr_type_pooled"     text="共有型" />
+        <text name="dr_type_individual" text="個別型" />
+        <text name="dr_type_pooledShort"     text="共有プール" />
+        <text name="dr_type_poolN"          text="共有プール %s" />
+        <text name="dr_type_poolNShort"     text="P%s" />
+        <text name="dr_type_individualShort" text="個別" />
+        <text name="dr_type_linkedShort"     text="接続" />
+        <text name="dr_type_internal"   text="内部" />
+        <text name="dr_type_blocked"    text="ブロック中" />
+
+        <!-- ================= OUTPUT PRIORITY =================
+             "Distance" is the default: nearest consumer first. "Ranked (n)" means the player
+             has ordered n destinations by hand in Advanced Outputs. -->
+        <text name="dr_priority_ranked"   text="順位付け（%d）" />
+        <text name="dr_priority_distance" text="距離" />
+
+        <!-- ================= BUILDING KIND =================
+             The right-hand column of the building list on the Silos tab. Very narrow. -->
+        <text name="dr_class_silo"    text="サイロ" />
+        <text name="dr_class_barn"    text="納屋" />
+        <text name="dr_class_storage" text="保管施設" />
+        <text name="dr_class_pit"     text="ピット" />
+        <text name="dr_class_market"  text="販売所" />
+
+        <!-- ================= NOTICES AND SMALL LABELS =================
+             The blocked notice is the last row of a building's input list when Advanced routing
+             has hidden products the building is not holding. SEPARATE singular and plural keys:
+             English used to make the singular by deleting the final "s", which does not survive
+             translation. If your language needs no distinction, give both the same text. -->
+        <text name="dr_notice_blockedInput"  text="+%d件の入力をブロック（詳細入力を参照）" />
+        <text name="dr_notice_blockedInputs" text="+%d件の入力をブロック（詳細入力を参照）" />
+        <text name="dr_label_off"      text="オフ" />
+        <text name="dr_label_blocked"  text="ブロック中" />
+        <text name="dr_label_building" text="施設" />
+        <!-- Fallback name for a production line the game does not name itself; %d is its number. -->
+        <text name="dr_label_line"     text="ライン %d" />
+
+        <!-- ================= ADVANCED OUTPUTS DIALOG =================
+             %s in the title is the building name. "Active - Invalid" marks a destination that
+             is switched on but would send the product in a circle back to where it started. -->
+        <text name="dr_adv_title"         text="詳細設定 - %s" />
+        <text name="dr_adv_activeInvalid" text="有効 - 無効な設定" />
+        <text name="dr_adv_noCapacity"    text="確保量を設定できる容量がありません" />
+        <text name="dr_adv_reserveBad"     text="確保量：リットル数を入力" />
+        <text name="dr_adv_reserveClamped" text="確保量は容量で制限：%s" />
+        <text name="dr_adv_loopOne"       text="%s は有効化できません - 製品がここに戻る循環が発生します。" />
+        <text name="dr_adv_loopMany"      text="供給先 %d 件はブロックされたままです - 有効にすると製品がここに戻る循環が発生します。" />
+
+        <!-- ================= ADVANCED INPUTS DIALOG =================
+             Subtitle, one of three depending on the building's storage. %s is the pool's total
+             capacity; the %d are how many products share it and how many have a max set. -->
+        <text name="dr_inp_title"        text="詳細入力設定 - %s" />
+        <text name="dr_inp_pooledCapped" text="共有保管：%s を製品 %d 種で共有、うち %d 種に上限あり。上限のない製品は共有容量全体を使用できます。" />
+        <text name="dr_inp_pooled"       text="共有保管：%s を製品 %d 種で共有しています。各製品が全容量を使用できるため、他の製品用の空きを確保するには上限を設定してください。" />
+        <text name="dr_inp_individual"   text="各製品の上限を設定するか、ブロックしてください。この施設は製品ごとに個別の保管容量を持ちます。" />
+        <!-- Shown in place of the source rows when nothing on the farm could supply the selected
+             product. An empty table under a header reads as a bug; a sentence reads as an answer. -->
+        <text name="dr_inp_noSources"    text="この農場には、この製品を供給できる施設がありません。" />
+        <!-- STATUS of one potential source, in a 226px cell at 12px: about 30 characters.
+             These are the three buckets the status column counts, in order.
+             FEEDING
+               Feeding         it moved product here on the last pass
+             COULD FEED, BUT ISN'T
+               Standby         ready and allowed, just not the one being drawn from
+               No Stock        allowed and in range, but holds none of it this instant
+             CAN'T FEED
+               Blocked         this source has blocked this receiver in its own Advanced Outputs
+               Not Distributing its mode does not feed consumers (Hold, Sell, plain Store...)
+               Out of Range    beyond the distribution radius, so no setting can make it supply -->
+        <!-- STATUS of one PRODUCTION LINE on the Productions tab: switched off, running, or on but
+             not currently producing (starved of an input, or its output buffer is full). -->
+        <text name="dr_lineStatus_off"     text="オフ" />
+        <text name="dr_lineStatus_running" text="稼働中" />
+        <text name="dr_lineStatus_idle"    text="待機" />
+        <text name="dr_srcst_feeding"    text="給餌中" />
+        <text name="dr_srcst_standby"    text="待機中" />
+        <text name="dr_srcst_noStock"    text="在庫なし" />
+        <text name="dr_srcst_blocked"    text="ブロック中" />
+        <text name="dr_srcst_notDist"    text="配送なし" />
+        <text name="dr_srcst_outOfRange" text="範囲外" />
+
+        <!-- ================= SPAWN PALLETS DIALOG =================
+             Quantity word beside the stepper, and the summary line above it. -->
+        <text name="dr_spawn_info"    text="保管量：%s    パレット：%s    上限：%d    生成：%s" />
+        <!-- Name of a pallet TYPE in the dropdown; the capacity and, for a modded pallet, the mod's
+             name are appended in code, e.g. "Pallet - 1,000 L (Liftable Pallets and Bales)". -->
+        <text name="dr_spawn_palletType" text="パレット" />
+        <!-- Quantity stepper: chosen count, maximum, and the exact litres that count moves.
+             Reads "2 / 3  (2,000 L)". Keep all three placeholders and their order. -->
+        <text name="dr_spawn_count"   text="%d / %d（%s）" />
+
+        <!-- ================= OUTPUT MODES =================
+             What a building does with a product. Shown in the OUTPUT MODE / OUT MODE column
+             on every building tab and on the Overview, and cycled with the "Cycle Output"
+             button. The widest column that holds these fits about 39 characters at the
+             current text size, and "Distribute + Market Supply" is the longest English one.
+
+             The compound modes read "first half + second half" and the ORDER IS MEANINGFUL:
+             the first action always happens first, and product is never sold or shipped to a
+             market until it has been offered to consumers at least once. Keep that sense.
+
+             The numbers are the internal mode ids. Do not renumber them; they are what the
+             save file stores. -->
+        <text name="dr_mode_0"   text="継承" />
+        <text name="dr_mode_1"   text="保持" />
+        <text name="dr_mode_2"   text="配送" />
+        <text name="dr_mode_3"   text="配送＋売却" />
+        <text name="dr_mode_4"   text="売却" />
+        <text name="dr_mode_5"   text="配送＋保管" />
+        <text name="dr_mode_6"   text="保管" />
+        <text name="dr_mode_7"   text="販売所へ供給" />
+        <text name="dr_mode_8"   text="配送＋販売所へ供給" />
+        <text name="dr_mode_9"   text="内部保管" />
+        <text name="dr_mode_10"  text="移動先を指定" />
+        <text name="dr_mode_11"  text="配送＋指定先へ移動" />
+        <!-- Plain "Hold" on a building that emits PALLETS: the product is held as pallets on
+             the pad, as opposed to "Hold Internal" which keeps it as bulk inside the building
+             and spawns nothing. The distinction is the whole point, so keep them distinct. -->
+        <text name="dr_mode_holdPallets" text="パレット保管" />
+
+        <!-- ================= SILOS/BUNKERS ================= -->
+        <text name="dr_bunker_fermenting"    text="発酵中" />
+        <text name="dr_bunker_fermented"     text="発酵済み - 使用するには覆いを外してください" />
+        <text name="dr_bunker_filling"       text="充填中" />
+        <text name="dr_bunker_fermentPct"    text="発酵中：%d%%"/>
+        <text name="dr_bunker_compactPct"    text="圧縮率：%d%%"/>
+
+
+        <!-- ================= LINK STATUS =================
+             The STATUS column. Three states: product actually moved on the last hourly pass,
+             the link is live but nothing needed to move, or it is blocked in Advanced routing.
+             A receiver RECEIVES and a source SENDS, which is the only difference between the
+             two sets. Narrow column, about 20 characters. -->
+        <text name="dr_status_in_ACTIVE"   text="稼働中（受入）" />
+        <text name="dr_status_in_IDLE"     text="稼働中（待機）" />
+        <text name="dr_status_in_BLOCKED"  text="ブロック中" />
+        <text name="dr_status_out_ACTIVE"  text="稼働中（送出）" />
+        <text name="dr_status_out_IDLE"    text="稼働中（待機）" />
+        <text name="dr_status_out_BLOCKED" text="ブロック中" />
+
+        <!-- ================= PRODUCT ROLE =================
+             Tagged after a product name on the Overview, e.g. "Flour (In)". A building can
+             both receive and supply the same product (a silo), which is what (In/Out) means.
+             VERY tight: it sits inside the product-name cell, so 3 to 7 characters. -->
+        <text name="dr_role_in"    text="入力" />
+        <text name="dr_role_out"   text="出力" />
+        <text name="dr_role_inout" text="入力／出力" />
+
+        <!-- ================= SELL TIMING =================
+             "Best price" holds the product until its best month before selling; "Immediate"
+             sells as soon as it is available. The dr_market_* forms appear in the Markets
+             tab's OUTPUT MODE column, where Hold means the market stocks the product and
+             sells nothing until told to. -->
+        <text name="dr_timing_bestPrice" text="最高価格" />
+        <text name="dr_timing_immediate" text="即時" />
+        <text name="dr_market_sellsNow"    text="今すぐ売却" />
+        <text name="dr_market_sellsNowSet" text="%s（設定：%s）" />
+        <text name="dr_market_hold"      text="保持" />
+        <text name="dr_market_best"      text="売却 - 最高価格" />
+        <text name="dr_market_immediate" text="売却 - 即時" />
+
+        <!-- ================= UNITS =================
+             Volumes read in litres below 1,000 and in kilolitres above it, so 1,001 L shows as
+             "1.001 kL". These are appended to a formatted number and INCLUDE their leading
+             space. Keep the space, and keep them short. -->
+        <text name="dr_unit_litre"      text=" L" />
+        <text name="dr_unit_kilolitre"  text=" kL" />
+
+        <!-- ================= MONEY NOTIFICATIONS =================
+             The on-screen finance popup when DR sells or charges for haulage. Each is a label
+             followed by a money figure, so keep any trailing space and punctuation. -->
+        <text name="dr_money_biogas"    text="バイオガス収入：" />
+        <text name="dr_money_sales"     text="製品売却：" />
+        <text name="dr_money_distCost"  text="配送費：-" />
+
+        <!-- ================= MISC ENGINE LABELS ================= -->
+        <!-- Stands in for the map's water where there is no physical tank to name. -->
+        <text name="dr_label_waterSource"      text="水源" />
+
+        <!-- ================= SETTINGS =================
+             One block per setting: the row title, its tooltip (_tt), then the
+             selector's values (_v1, _v2, ...) IN ORDER. The order is meaningful,
+             because _v1 is the first option the left/right arrows land on and the
+             INDEX is what the save file stores. Translate each value in place;
+             never reorder them, and never drop one. -->
+
+        <text name="dr_set_scope"     text="対象範囲" />
+        <text name="dr_set_scope_tt"  text="範囲：所有するすべての施設が農場全域を対象にします。近接：以下の半径内にある供給元のみを対象にします。" />
+        <text name="dr_set_scope_v1"  text="範囲（農場全域）" />
+        <text name="dr_set_scope_v2"  text="近接（半径）" />
+
+        <text name="dr_set_includeHusbandry"     text="家畜施設" />
+        <text name="dr_set_includeHusbandry_tt"  text="牛舎・鶏舎・養蜂箱・堆肥置き場・スラリー槽などの家畜施設を配送ネットワークに含めます。オフにすると対象外になり、飼料の供給も、牛乳／堆肥／スラリー／卵／羊毛／はちみつの配送・売却も行われません。" />
+        <text name="dr_set_includeHusbandry_v1"  text="オン" />
+        <text name="dr_set_includeHusbandry_v2"  text="オフ" />
+
+        <text name="dr_set_includeSilosSheds"     text="サイロとパレット保管庫" />
+        <text name="dr_set_includeSilosSheds_tt"  text="作物・資材用サイロとパレット保管庫を配送ネットワークに含めます。オフにすると、サイロから生産施設への供給や、パレット保管庫での受入・搬出が停止します。（堆肥置き場とスラリー槽は「家畜施設」の設定に従います。）" />
+        <text name="dr_set_includeSilosSheds_v1"  text="オン" />
+        <text name="dr_set_includeSilosSheds_v2"  text="オフ" />
+
+        <text name="dr_set_includeMarkets"     text="販売所とキオスク" />
+        <text name="dr_set_includeMarkets_tt"  text="販売所とキオスクを配送ネットワークに含めます。オフにすると、農場所有の製品は販売用に配送されなくなり、「販売所」タブも非表示になります。" />
+        <text name="dr_set_includeMarkets_v1"  text="オン" />
+        <text name="dr_set_includeMarkets_v2"  text="オフ" />
+
+        <text name="dr_set_includeMapStorage"     text="マップ上の共有保管施設" />
+        <text name="dr_set_includeMapStorage_tt"  text="鉄道の穀物集積所など、所有していなくても保管に利用できるマップ上の保管施設を含めます。通常は保管量に応じた使用料がかかるため、初期設定ではオフです。オンにすると保管施設として表示され、すべての製品が「保持」に設定されます。設定を変更するまで製品は移動しません。" />
+        <text name="dr_set_includeMapStorage_v1"  text="オン" />
+        <text name="dr_set_includeMapStorage_v2"  text="オフ" />
+
+        <text name="dr_set_advancedRouting"     text="詳細な配送設定" />
+        <text name="dr_set_advancedRouting_tt"  text="詳細出力（供給元ごとのブロック／優先順位／指定先への移動）と詳細入力（入力ブロック／上限／充填目標）の一括設定です。オフにすると各ボタンが非表示になり、近い供給元を優先する標準配送に戻ります。警告：オフにすると、既存の詳細設定（ブロック、優先順位、指定先、入力上限、充填目標）がすべて初期化されます。再度オンにしても復元されないため、設定し直す必要があります。" />
+        <text name="dr_set_advancedRouting_v1"  text="オン" />
+        <text name="dr_set_advancedRouting_v2"  text="オフ" />
+        <text name="dr_set_routingView"         text="配送表示" />
+        <text name="dr_set_routingView_tt"      text="「詳細入力」「詳細出力」を開いたときの表示方法です。「グラフ」は供給元・保管施設・製品・供給先をひとつの図に表示し、各接続を切り替えられます。「従来のリスト」は従来の2つのリスト画面を開きます。どちらも同じ設定を変更します。詳細な配送設定がオフの場合は影響しません。" />
+        <text name="dr_set_routingView_v1"      text="グラフ" />
+        <text name="dr_set_routingView_v2"      text="従来のリスト" />
+
+        <text name="dr_set_defaultOutputMode"     text="新規設置施設の出力モード" />
+        <text name="dr_set_defaultOutputMode_tt"  text="施設を新しく設置した時点で適用する出力モードです。通常は「配送」です。「保持」にすると、設定を変更するまで生産物を施設内に保持し、未設定の施設から何も搬出しません。パレットを生成する施設では「パレット保管」、パレット生成を「生成しない」にしている場合は「内部保管」と表示されます。この設定は今後設置する施設にのみ適用され、既存の施設には影響しません。" />
+        <text name="dr_set_defaultOutputMode_v1"  text="配送" />
+        <text name="dr_set_defaultOutputMode_v2"  text="保持" />
+
+        <text name="dr_set_defaultInputMode"     text="新規設置施設の入力モード" />
+        <text name="dr_set_defaultInputMode_tt"  text="新しく設置した施設が配送を受け入れるかを設定します。通常は「すべて受け入れる」です。「すべてブロック」にすると、「詳細入力」で許可するまで新しい施設への配送を停止します。注意：「すべてブロック」は詳細な配送設定がオンの場合のみ機能します。入力ブロックは詳細設定の一部であり、詳細設定をオフにすると解除されます。この設定は今後設置する施設にのみ適用され、既存の施設には影響しません。" />
+        <text name="dr_set_defaultInputMode_v1"  text="すべて受け入れる" />
+        <text name="dr_set_defaultInputMode_v2"  text="すべてブロック" />
+
+        <text name="dr_set_radius"     text="近接半径" />
+        <text name="dr_set_radius_tt"  text="近接モードで、消費施設が供給元を探す範囲です。" />
+        <text name="dr_set_radius_v1"  text="25 m" />
+        <text name="dr_set_radius_v2"  text="50 m" />
+        <text name="dr_set_radius_v3"  text="75 m" />
+        <text name="dr_set_radius_v4"  text="100 m" />
+        <text name="dr_set_radius_v5"  text="150 m" />
+        <text name="dr_set_radius_v6"  text="200 m" />
+        <text name="dr_set_radius_v7"  text="400 m" />
+
+        <text name="dr_set_bufferHours"     text="消費施設の備蓄量" />
+        <text name="dr_set_bufferHours_tt"  text="各消費施設に、1回の周期ごとに何時間分の投入材料を補充するかを設定します。" />
+        <text name="dr_set_bufferHours_v1"  text="1時間" />
+        <text name="dr_set_bufferHours_v2"  text="2時間" />
+        <text name="dr_set_bufferHours_v3"  text="4時間" />
+        <text name="dr_set_bufferHours_v4"  text="8時間" />
+        <text name="dr_set_bufferHours_v5"  text="12時間" />
+        <text name="dr_set_bufferHours_v6"  text="24時間" />
+
+        <text name="dr_set_sellEnabled"     text="売却" />
+        <text name="dr_set_sellEnabled_tt"  text="自動売却（「売却」「配送＋売却」モード）の全体設定です。" />
+        <text name="dr_set_sellEnabled_v1"  text="有効" />
+        <text name="dr_set_sellEnabled_v2"  text="無効" />
+
+        <text name="dr_set_waterSupplyEnabled"     text="自動給水" />
+        <text name="dr_set_waterSupplyEnabled_tt"  text="水を必要とする生産施設や家畜の放牧地に自動で給水します（水源までの距離に応じて費用がかかります）。" />
+        <text name="dr_set_waterSupplyEnabled_v1"  text="有効" />
+        <text name="dr_set_waterSupplyEnabled_v2"  text="無効" />
+
+        <text name="dr_set_distCostEnabled"     text="配送費用" />
+        <text name="dr_set_distCostEnabled_tt"  text="有効な配送ごとに時間単位の運搬費用を請求します。費用は運搬距離に応じて変化します。" />
+        <text name="dr_set_distCostEnabled_v1"  text="有効" />
+        <text name="dr_set_distCostEnabled_v2"  text="無効" />
+
+        <text name="dr_set_distCostBase"     text="費用単価" />
+        <text name="dr_set_distCostBase_tt"  text="以下の費用距離以内の短距離輸送に適用される、1時間あたりの基本費用です。" />
+        <!-- MONEY VALUES: "%s" is the amount, formatted by the GAME in the player's own currency.
+             DO NOT write a currency symbol here. FS25 takes the currency from the SAVEGAME rather than
+             the language, so a symbol baked into any translation would be wrong for anyone playing that
+             language with a different currency. Translate only the "/h" (per hour) part, and keep the
+             "%s". The five are identical in English on purpose; a language needing different word order
+             per amount can still vary them. -->
+        <text name="dr_set_distCostBase_v1"  text="%s /時" />
+        <text name="dr_set_distCostBase_v2"  text="%s /時" />
+        <text name="dr_set_distCostBase_v3"  text="%s /時" />
+        <text name="dr_set_distCostBase_v4"  text="%s /時" />
+        <text name="dr_set_distCostBase_v5"  text="%s /時" />
+
+        <text name="dr_set_distCostThreshold"     text="費用距離" />
+        <text name="dr_set_distCostThreshold_tt"  text="この距離以内の輸送には基本料金が適用され、それを超えると距離に比例して費用が増えます。" />
+        <text name="dr_set_distCostThreshold_v1"  text="25 m" />
+        <text name="dr_set_distCostThreshold_v2"  text="50 m" />
+        <text name="dr_set_distCostThreshold_v3"  text="100 m" />
+        <text name="dr_set_distCostThreshold_v4"  text="200 m" />
+        <text name="dr_set_distCostThreshold_v5"  text="500 m" />
+
+        <text name="dr_set_seasonalReserveEnabled"     text="季節収穫用の備蓄" />
+        <text name="dr_set_seasonalReserveEnabled_tt"  text="「配送＋売却」に設定した作物は、次の収穫まで生産施設に供給できる量を確保し、余剰分だけを売却します。" />
+        <text name="dr_set_seasonalReserveEnabled_v1"  text="有効" />
+        <text name="dr_set_seasonalReserveEnabled_v2"  text="無効" />
+
+        <text name="dr_set_seasonalFallbackMonths"     text="収穫時期を学習するまでの備蓄月数" />
+        <text name="dr_set_seasonalFallbackMonths_tt"  text="MODが実際の収穫時期を把握するまで、作物を何か月分備蓄するかを設定します。" />
+        <text name="dr_set_seasonalFallbackMonths_v1"  text="6か月" />
+        <text name="dr_set_seasonalFallbackMonths_v2"  text="12か月" />
+        <text name="dr_set_seasonalFallbackMonths_v3"  text="13か月" />
+        <text name="dr_set_seasonalFallbackMonths_v4"  text="18か月" />
+        <text name="dr_set_seasonalFallbackMonths_v5"  text="24か月" />
+
+        <text name="dr_set_bestPriceEnabled"     text="最高価格で売却" />
+        <text name="dr_set_bestPriceEnabled_tt"  text="「売却」「配送＋売却」の余剰品を、最も価格が高くなる月まで保管する全体設定です。オフの場合はすべて即時売却します。" />
+        <text name="dr_set_bestPriceEnabled_v1"  text="有効" />
+        <text name="dr_set_bestPriceEnabled_v2"  text="無効" />
+
+        <text name="dr_set_bestPriceDefault"     text="既定の売却タイミング" />
+        <text name="dr_set_bestPriceDefault_tt"  text="各施設で個別に設定するまで、「売却」「配送＋売却」の出力とすべての販売所製品に適用する既定値です。設定済みの販売所は現在の設定を維持します。" />
+        <text name="dr_set_bestPriceDefault_v1"  text="最高価格で売却" />
+        <text name="dr_set_bestPriceDefault_v2"  text="すぐに売却" />
+
+        <text name="dr_set_palletSpawnMode"     text="パレット生成" />
+        <text name="dr_set_palletSpawnMode_tt"  text="満載パレット：家畜施設は生産施設と同様に製品を内部に保管し、パレットが満載になると搬出します。標準：パレットをすぐに生成し、徐々に満たします。生成しない：自動生成せず、製品を内部に保持したまま配送・保管・売却します。「パレットを生成」から手動で搬出できます。「生成しない」は家畜施設と生産施設にのみ適用されます。内部保管がない養蜂箱は通常どおり生成し、購入用パレットを扱う店舗にも影響しません。" />
+        <text name="dr_set_palletSpawnMode_v1"  text="標準（徐々に充填）" />
+        <text name="dr_set_palletSpawnMode_v2"  text="満載パレットのみ" />
+        <text name="dr_set_palletSpawnMode_v3"  text="パレットを生成しない" />
+        <text name="dr_set_passThroughStores"     text="中継保管施設" />
+        <text name="dr_set_passThroughStores_tt"  text="一部のMODは、製品をそのまま同じ製品に戻すダミー生産ラインを備えた保管施設を追加します。この生産ラインは実際には何もせず、ゲームから施設へ配送させるためだけのものです。「保管施設として扱う」を選ぶと、Distribution Reduxはその施設を本来のサイロとして認識し、農場中の製品をすべて要求しなくなります。実際の生産ラインがある場合は「生産施設」タブに表示されます。3番目の選択肢はゲーム内でもダミーラインを無効化します。表示は整理されますが、セーブデータに記録され、MODを削除しても無効のままです。" />
+        <text name="dr_set_passThroughStores_v1"  text="生産施設として扱う" />
+        <text name="dr_set_passThroughStores_v2"  text="保管施設として扱う" />
+        <text name="dr_set_passThroughStores_v3"  text="保管施設として扱い、生産ラインを無効化" />
+        <!-- Role labels. Shown ONLY on a building that does two jobs at once (a silo that is also a
+             pallet store), to tell its halves apart in the building list. Keep them short - they are
+             appended to a building name in a fixed-width list. -->
+        <text name="dr_role_nameFmt"      text="%s（%s）" />
+        <text name="dr_role_silo"         text="サイロ" />
+        <text name="dr_role_shed"         text="パレット保管庫" />
+        <text name="dr_role_production"   text="生産施設" />
+        <text name="dr_role_husbandry"    text="家畜" />
+        <text name="dr_role_heap"         text="ピット" />
+        <text name="dr_role_market"       text="販売所" />
+        <text name="dr_type_linked"       text="接続済み" />
+
+        <text name="dr_set_menuRefresh"     text="メニュー更新頻度" />
+        <text name="dr_set_menuRefresh_tt"  text="開いているメニューが農場の情報を読み直す頻度です。「概要」ではすべての施設と製品を再取得するため、大規模な農場では更新頻度を下げるとメニューの応答性が向上します。「手動のみ」ではバックグラウンド更新を停止しますが、項目を選択したときや「概要」の「更新」を押したときには数値が更新されます。" />
+        <text name="dr_set_menuRefresh_v1"  text="リアルタイム（0.5秒）" />
+        <text name="dr_set_menuRefresh_v2"  text="通常（2秒）" />
+        <text name="dr_set_menuRefresh_v3"  text="低頻度（10秒）" />
+        <text name="dr_set_menuRefresh_v4"  text="手動のみ" />
+        <text name="dr_set_passProfiler"    text="パフォーマンスログ" />
+        <text name="dr_set_passProfiler_tt" text="DRの毎時処理にかかった時間とワールド走査回数をlog.txtに記録します。「遅い処理のみ」では、毎時処理が150ミリ秒を超えた場合だけ記録します。パフォーマンス報告を求められた場合は「毎回（診断）」に切り替えてください。ゲーム内の1時間ごとに2行記録され、正常な農場と遅い農場を比較できます。Husbandry Reduxにも同じ設定があり、どちらか一方をオンにすると記録が有効になります。" />
+        <text name="dr_set_passProfiler_v1" text="オフ" />
+        <text name="dr_set_passProfiler_v2" text="遅い処理のみ" />
+        <text name="dr_set_passProfiler_v3" text="毎回（診断用）" />
+
+        <text name="dr_set_debugEnabled"     text="デバッグログ" />
+        <text name="dr_set_debugEnabled_tt"  text="配送に関する詳細な動作（移動、売却、保管、給水、費用）をlog.txtに記録します。ログを簡潔にしたい場合はオフにしてください。" />
+        <text name="dr_set_debugEnabled_v1"  text="有効" />
+        <text name="dr_set_debugEnabled_v2"  text="無効" />
+
+
+        <!-- ============ USER GUIDE (generated: gen_guide_l10n.py) ============
+             11 topics, one key per non-blank paragraph. Markers at the start of a
+             value are STRUCTURE, not words, and must be kept exactly as they are:
+               "## "   a heading
+               "### "  a sub heading
+               "- "    a bullet in a list
+             Everything after the marker is ordinary prose. A key you leave out falls
+             back to English, so a topic can be translated a paragraph at a time.
+             DO NOT reorder or renumber these; the numbers are positions in the guide. -->
+
+        <text name="dr_guide_gettingStarted_title" text="はじめに" />
+        <text name="dr_guide_gettingStarted_1" text="Distribution Reduxはゲーム標準の配送システムを完全に置き換えます。追加の設置物は不要です。標準施設と、施設種別ごとのGIANTS標準仕様に従う建物MODに対応します。非常に複雑なMODであり、意図せず問題や配送の詰まりを発生させる可能性があります。使用前にヘルプガイド全体を確認してください。" />
+        <text name="dr_guide_gettingStarted_2" text="## 画面の開き方" />
+        <text name="dr_guide_gettingStarted_3" text="バックスラッシュキー：Distribution Reduxメニューを開きます。施設種別ごとのタブ、ヘルプガイド、設定がある全画面ウィンドウです。" />
+        <text name="dr_guide_gettingStarted_4" text="左角括弧キー：徒歩で施設の積込地点または荷下ろし地点を見ると、その施設のページを直接開きます。ネットワークに含まれる自分の施設を見ている場合にのみ、操作案内が表示されます。" />
+        <text name="dr_guide_gettingStarted_5" text="どちらのキーも「オプション」-「操作」で変更できます。" />
+        <text name="dr_guide_gettingStarted_6" text="## 基本的な使い方" />
+        <text name="dr_guide_gettingStarted_7" text="メニューを開き、対象の施設を選び、各製品を「保持」「配送」「売却」などに設定します。基本操作はこれだけで、その他は詳細設定です。" />
+        <text name="dr_guide_gettingStarted_8" text="## ゲーム標準機能との違い" />
+        <text name="dr_guide_gettingStarted_9" text="- 保管・生産・給餌・売却を行うあらゆる施設を配送に参加させます。" />
+        <text name="dr_guide_gettingStarted_10" text="- 容量いっぱいにするのではなく、需要に必要な分だけ配送します。" />
+        <text name="dr_guide_gettingStarted_11" text="- 配送距離に応じた費用が発生します。" />
+        <text name="dr_guide_gettingStarted_12" text="- 即時売却、または最高価格になるまで待つ設定ができます。" />
+        <text name="dr_guide_gettingStarted_13" text="- 季節作物を次の収穫まで生産に使えるよう備蓄し、余剰分だけを売却できます。" />
+        <text name="dr_guide_gettingStarted_14" text="- 自動給水では、保管施設または最寄りの水源（湖など）から必要な水を供給します。" />
+        <text name="dr_guide_gettingStarted_15" text="- 標準の配送方式を上書きし、需要の優先順位、特定の入力・出力のブロック、出力の備蓄量、入力の充填目標を設定できます。" />
+        <text name="dr_guide_gettingStarted_16" text="## 各周期で行われる処理" />
+        <text name="dr_guide_gettingStarted_17" text="- 割当：生産施設の投入材料、家畜の飼料、給餌ロボットの貯蔵槽、わら、家畜施設の水など、すべての消費先から需要リストを作成します。製品ごとのブロック、優先順位、入力上限を守りながら、近い供給元から需要に割り当てます。" />
+        <text name="dr_guide_gettingStarted_18" text="- 残りを移動：余剰品を空きのある保管施設に保管し、販売所へ移し、その後、保管施設間で在庫を移動します。製品ごとのブロック、優先順位、入力上限が適用されます。" />
+        <text name="dr_guide_gettingStarted_19" text="- 費用計算：距離に基づく運搬費と、ゲーム標準の時間ごとの生産稼働費を計算します（DRが標準の毎時処理を抑制するため、これを別途計上します）。" />
+        <text name="dr_guide_gettingStarted_20" text="- 売却／販売所への供給：余剰品、販売所の在庫、電力やメタンなどの直接出力を売却します。季節備蓄と即時売却／最高価格で売却の設定に従います。" />
+        <text name="dr_guide_gettingStarted_21" text="- 記録：生産施設と家畜施設の処理量を記録し、手動で積み込んだ量・荷下ろしした量の差分を計算して収支概要を出力します。" />
+
+        <text name="dr_guide_theMenu_title" text="メニュー" />
+        <text name="dr_guide_theMenu_1" text="バックスラッシュキーで統合メニューを開きます。左側にタブが並びます。" />
+        <text name="dr_guide_theMenu_2" text="## タブ" />
+        <text name="dr_guide_theMenu_3" text="- 生産施設 - 工場や生産拠点。" />
+        <text name="dr_guide_theMenu_4" text="- サイロ - バルクサイロ、パレット／ベール保管庫、堆肥置き場、スラリー槽。" />
+        <text name="dr_guide_theMenu_5" text="- 家畜施設 - 牛舎、鶏舎、囲い、養蜂箱。" />
+        <text name="dr_guide_theMenu_6" text="- 販売所 - マップに設置したキオスクや市場。" />
+        <text name="dr_guide_theMenu_7" text="- 概要 - すべての施設と製品の詳細を1つの表に表示します。" />
+        <text name="dr_guide_theMenu_8" text="- ユーザーガイド - このガイド。" />
+        <text name="dr_guide_theMenu_9" text="- 設定 - 全体設定。" />
+        <text name="dr_guide_theMenu_10" text="各施設タブは左右2ペイン構成です。左側に自分の施設、右側に選択した施設の受入製品・生産ライン・出荷製品が表示されます。どのリストが表示されるかは施設の機能によって異なります。" />
+        <text name="dr_guide_theMenu_11" text="## 集計期間" />
+        <text name="dr_guide_theMenu_12" text="各施設タブと「概要」タブの上部には、時間・月・年を選ぶ集計期間があります。選択した期間内の受入量、消費量、生産量、配送量、売却量を集計します。" />
+        <text name="dr_guide_theMenu_13" text="Distribution Reduxでの「月」は24回の毎時処理を意味します。そのため、ゲーム内の「月」は期間あたりに設定した実日数にかかわらず、おおむねゲーム内の1日分です。「保管量」は流量ではなく在庫なので、集計期間にかかわらず現在施設内にある量を表示します。" />
+        <text name="dr_guide_theMenu_14" text="年単位のデータは時間とともに蓄積されます。この機能が追加される前の記録はないため、古いセーブデータでは「年」列は空欄から始まり、ゲーム内の月が経過するごとに埋まっていきます。" />
+        <text name="dr_guide_theMenu_15" text="## 非表示になるタブ" />
+        <text name="dr_guide_theMenu_16" text="「サイロ」「家畜施設」「販売所」タブは、設定で該当グループをオンにした場合のみ表示されます。オフにすると、その施設群は配送ネットワークから完全に除外され、タブも非表示になります。再びオンにすると元に戻ります。" />
+
+        <text name="dr_guide_buildingPages_title" text="施設ページ" />
+        <text name="dr_guide_buildingPages_1" text="「生産施設」「サイロ」「販売所」「家畜施設」タブは共通のレイアウトです。左側で施設を選び、右側で製品を設定します。施設によって消費・生産するものが異なるため、表や列は少しずつ違います。" />
+        <text name="dr_guide_buildingPages_2" text="## 表の内容" />
+        <text name="dr_guide_buildingPages_3" text="### 受入製品" />
+        <text name="dr_guide_buildingPages_4" text="- 製品 - 名前とアイコン。" />
+        <text name="dr_guide_buildingPages_5" text="- 保管量／上限 - 現在の保管量、保管可能な最大量、設定した上限（括弧内は割合）。" />
+        <text name="dr_guide_buildingPages_6" text="- 空き容量 - 設定した上限（%）と残り容量を考慮した、この製品を追加で保管できる量。" />
+        <text name="dr_guide_buildingPages_7" text="- 受入量 - 選択した集計期間中にDistribution Reduxがこの施設へ配送した製品の量。" />
+        <text name="dr_guide_buildingPages_8" text="- 消費量 - 選択した集計期間中に施設が使用した製品の量。生産施設と家畜施設のみ。" />
+        <text name="dr_guide_buildingPages_9" text="- 状態 - 直近の周期の動作に基づく「稼働中（受入）」「稼働中（待機）」、または「ブロック中」。" />
+        <text name="dr_guide_buildingPages_10" text="### 生産ライン（生産施設のみ）" />
+        <text name="dr_guide_buildingPages_11" text="- 生産ライン - 生産する製品。括弧内は投入材料。" />
+        <text name="dr_guide_buildingPages_12" text="- 状態 - 稼働中、待機（オンだが投入材料不足）、またはオフ。" />
+        <text name="dr_guide_buildingPages_13" text="- 目標／月 - 必要な投入材料がすべて揃った場合に、そのラインが1か月に生産すると予想される量。" />
+        <text name="dr_guide_buildingPages_14" text="### 出荷製品" />
+        <text name="dr_guide_buildingPages_15" text="- 製品 - 名前とアイコン。" />
+        <text name="dr_guide_buildingPages_16" text="- 保管量（上限） - 現在施設内にある製品の量。括弧内は容量。" />
+        <text name="dr_guide_buildingPages_17" text="- 空き容量 - この製品を追加で保管できる量。" />
+        <text name="dr_guide_buildingPages_18" text="- 生産量 - 選択した集計期間中に生産した量。生産施設と家畜施設のみ。" />
+        <text name="dr_guide_buildingPages_19" text="- 配送量 - 配送・保管・移動・売却を合わせた搬出量。売却があった場合は括弧内に売却額を表示します。" />
+        <text name="dr_guide_buildingPages_20" text="- 出力モード - この製品に現在設定されている出力方法。" />
+        <text name="dr_guide_buildingPages_21" text="- 状態 - 直近の周期の動作に基づく「稼働中（送出）」「稼働中（待機）」、または「ブロック中」。" />
+        <text name="dr_guide_buildingPages_22" text="## 注意" />
+        <text name="dr_guide_buildingPages_23" text="- 施設が内部保管とパレットの両方に対応する場合、内部保管量の後に、施設のパレット生成機に保管されている量を表示します。" />
+        <text name="dr_guide_buildingPages_24" text="- 選択した期間には、その期間中に移動した材料のみが表示されます。生産を有効にしたばかりで「年」を表示している場合、有効化してから移動した量だけが表示されます。" />
+        <text name="dr_guide_buildingPages_25" text="- 製品の移動先などの詳細は「概要」タブで確認できます。" />
+        <text name="dr_guide_buildingPages_26" text="- 量の単位は1,000リットルで切り替わります。999 Lまではリットル、それ以上は余分な末尾のゼロを省いたキロリットルで表示されます。例：1,001 Lは1.001 kL、123,123 Lは123.123 kL、600,000 Lは600 kLです。小数第3位がちょうど1リットルに相当するため、単位が変わっても情報は失われません。" />
+        <text name="dr_guide_buildingPages_27" text="- 変更が反映されたか（待機中か稼働中かなど）を確認するには、UIの列が更新されるまで1周期（1時間）待つ必要があります。配送が連鎖している場合、すべての段階が更新されるまで数時間かかることがあります。" />
+        <text name="dr_guide_buildingPages_28" text="## 設定の変更" />
+        <text name="dr_guide_buildingPages_29" text="- 生産ラインをオン／オフにするには、ラインを選択して「生産ラインを切り替え」を押します。" />
+        <text name="dr_guide_buildingPages_30" text="- 出力の動作を変更するには、対象を選択して「出力モードを切り替え」を押します。" />
+        <text name="dr_guide_buildingPages_31" text="- 「詳細設定」では製品ごとの配送制御を開きます（「詳細入力設定」「詳細出力設定」を参照）。" />
+        <text name="dr_guide_buildingPages_32" text="- 売却モードの出力には「売却タイミング」が表示されます。" />
+        <text name="dr_guide_buildingPages_33" text="ここで生産出力を変更したり生産ラインを切り替えたりすると、ゲーム標準の生産画面の出力設定にも反映され、その逆も同様です。標準画面にもこのMODのモード名が表示されます。" />
+
+        <text name="dr_guide_outputModes_title" text="出力モード" />
+        <text name="dr_guide_outputModes_1" text="## 施設種別ごとに使用できるモード" />
+        <text name="dr_guide_outputModes_2" text="- 生産施設 - 配送、保管、パレット保管、内部保管、売却、販売所へ供給。" />
+        <text name="dr_guide_outputModes_3" text="- サイロと保管施設 - 配送、指定先へ移動、保持、売却、販売所へ供給。" />
+        <text name="dr_guide_outputModes_4" text="- 家畜施設 - 配送、保管、パレット保管、内部保管、売却、販売所へ供給。" />
+        <text name="dr_guide_outputModes_5" text="- 販売所 - 売却または保持のみ。" />
+        <text name="dr_guide_outputModes_6" text="すべてのモードが常に選べるわけではありません。配送先が存在しないモードは、行き止まりとして表示するのではなく非表示になります。たとえば販売所が設置されていない場合や、その製品を受け入れる販売所がない場合、「販売所へ供給」はリストに表示されません。" />
+        <text name="dr_guide_outputModes_7" text="## 各モードの説明" />
+        <text name="dr_guide_outputModes_8" text="- 配送 - この製品を必要とする近隣の生産施設や家畜へ、近い供給元からレシピで必要な量まで供給します。余剰分はその場に残ります。" />
+        <text name="dr_guide_outputModes_9" text="- 保管 - 出力を受け入れ可能な保管施設へ、近い順に移します。施設が満杯になると次の施設へ移します。生産施設と家畜施設で使用できます。" />
+        <text name="dr_guide_outputModes_10" text="- 指定先へ移動 - 製品をある保管施設から、受け入れ可能な別の保管施設へ移します。保管施設のみで使用できます。下記の注意を参照してください。" />
+        <text name="dr_guide_outputModes_11" text="- 内部保管 - 出力をバルク状態で施設内に保管します。パレットは自動生成されず、必要に応じて手動で生成します（「パレット生成」を参照）。" />
+        <text name="dr_guide_outputModes_12" text="- パレット保管 - 出力をパレットとしてその場に置き、蓄積させます。" />
+        <text name="dr_guide_outputModes_13" text="- 売却 - 製品を即時、または最高価格で売却します（「売却タイミング」を参照）。" />
+        <text name="dr_guide_outputModes_14" text="- 販売所へ供給 - 出力を設置済みの市場やキオスクへ移し、通常より高い価格で売却します。" />
+        <text name="dr_guide_outputModes_15" text="## 複合モード" />
+        <text name="dr_guide_outputModes_16" text="- 配送＋売却 - まずすべての需要を満たし、残った分を売却します。" />
+        <text name="dr_guide_outputModes_17" text="- 配送＋保管 - まず需要を満たし、余剰分は売却せず保管施設へ移します。生産施設と家畜施設のみ。" />
+        <text name="dr_guide_outputModes_18" text="- 配送＋指定先へ移動 - まず需要を満たし、余剰分を指定した保管施設へ移します。保管施設のみ。" />
+        <text name="dr_guide_outputModes_19" text="- 配送＋販売所へ供給 - まず需要を満たし、余剰分を市場またはキオスクへ移します。" />
+        <text name="dr_guide_outputModes_20" text="複合モードでは、必ず前半の処理が先に行われます。消費先に供給される前に売却・保管・市場への搬送が行われることはありません。" />
+        <text name="dr_guide_outputModes_21" text="「指定先へ移動」は、詳細な配送設定が有効な場合にのみ選択できます（「詳細な配送設定」を参照）。" />
+
+        <text name="dr_guide_advancedRoutingRules_title" text="詳細な配送設定とルール" />
+        <text name="dr_guide_advancedRoutingRules_1" text="## 詳細な配送設定" />
+        <text name="dr_guide_advancedRoutingRules_2" text="詳細な配送設定では、各施設の入力と出力を個別に制御できます。初期設定ではオンで、「設定」からオフにできます。" />
+        <text name="dr_guide_advancedRoutingRules_3" text="### 詳細入力設定" />
+        <text name="dr_guide_advancedRoutingRules_4" text="- 受入製品を選び、「詳細入力設定」を押します。" />
+        <text name="dr_guide_advancedRoutingRules_5" text="- ブロック／許可 - この施設がその製品を受け入れないようにします／受け入れを許可します。" />
+        <text name="dr_guide_advancedRoutingRules_6" text="- すべてブロック／すべて許可 - すべての入力を一括で切り替えます。" />
+        <text name="dr_guide_advancedRoutingRules_7" text="- 受入上限 - 施設がその製品を保管できる最大量です。複数の製品で1つのタンクを共有する場合に重要です。共有容量は先着順で、初期設定ではゲーム標準と同様に各製品が全容量を使えます。そのため、需要の多い製品がサイロを満杯にし、ほかの製品の空きがなくなる場合があります。製品ごとに受入上限を設定して容量を制限し、ほかの製品用の空きを確保してください。上限は個別に設定でき、合計を100%にする必要はありません。変更しない製品は無制限のままです。" />
+        <text name="dr_guide_advancedRoutingRules_8" text="- 目標 - その製品の充填目標です。次の周期に必要な量だけを配送するのではなく、ネットワークはこの水準まで補充し、その量を維持します。実質的な入力備蓄として機能します。" />
+        <text name="dr_guide_advancedRoutingRules_9" text="### 詳細出力設定" />
+        <text name="dr_guide_advancedRoutingRules_10" text="- 調整したい出荷製品を選び、「詳細出力設定」を押します。" />
+        <text name="dr_guide_advancedRoutingRules_11" text="- ブロック／許可 - この出力をその供給先へ送らないようにします／送信を許可します。" />
+        <text name="dr_guide_advancedRoutingRules_12" text="- 優先順位 - この出力の需要先と保管先の優先順位を設定します。標準の「近い順に配送し、満杯なら次へ」という動作を上書きします。" />
+        <text name="dr_guide_advancedRoutingRules_13" text="- 備蓄量（＋／－） - 常に施設内に残しておくリットル数を設定します。配送・売却・保管・移動・販売所への供給のいずれも、この量を下回るまで製品を搬出しません。" />
+        <text name="dr_guide_advancedRoutingRules_14" text="### 「指定先へ移動」出力モード" />
+        <text name="dr_guide_advancedRoutingRules_15" text="- このモードは、詳細な配送設定がオンで、施設種別が「保管施設」の場合にのみ出力モードとして使用できます。" />
+        <text name="dr_guide_advancedRoutingRules_16" text="- このモードでは、保管施設内の材料を、受け入れ可能な別の保管施設へ移動できます。" />
+        <text name="dr_guide_advancedRoutingRules_17" text="- 有効化時は、製品の循環が誤って発生しないよう、初期設定ですべての供給先がブロックされています。" />
+        <text name="dr_guide_advancedRoutingRules_18" text="- 有効にするには、出力を選択して「詳細出力設定」を押します。右側に対応する供給先の一覧（すべてブロック）が表示されるので、必要な施設を許可してください。この移動にも、優先順位や備蓄量など、その他の詳細出力機能を利用できます。" />
+        <text name="dr_guide_advancedRoutingRules_19" text="- 初期設定では、各周期で移動先の施設を可能な限り満たそうとします。受入側の「受入上限」を設定すると、最初の製品だけでサイロが満杯になるのを防ぎ、複数の製品を保管する空きを確保できます。" />
+        <text name="dr_guide_advancedRoutingRules_20" text="### 詳細な配送設定をオフにする前に" />
+        <text name="dr_guide_advancedRoutingRules_21" text="- 詳細設定は無視されるだけでなく、すべて消去されます。ブロック、優先順位、備蓄量、受入上限、目標がすべて初期化されます。後で再びオンにしても設定は復元されないため、最初から設定し直す必要があります。" />
+        <text name="dr_guide_advancedRoutingRules_22" text="## 詳細ルール" />
+        <text name="dr_guide_advancedRoutingRules_23" text="以下の詳細ルールは、詳細な配送設定のオン／オフにかかわらず適用されます。季節収穫用の備蓄と自動給水は、必要に応じて設定からオン／オフできます。" />
+        <text name="dr_guide_advancedRoutingRules_24" text="### 売却モード" />
+        <text name="dr_guide_advancedRoutingRules_25" text="売却モードの出力は、即時売却するか、最高価格になるまで待つかを選べます。待機中は価格がピークになるまで製品が施設内に蓄積するため、十分な空き容量を確保してください。" />
+        <text name="dr_guide_advancedRoutingRules_26" text="### 季節収穫用の備蓄" />
+        <text name="dr_guide_advancedRoutingRules_27" text="初期設定ではオフです。オンにすると、年1回収穫する作物は自分の生産施設に供給するため約1年分を確保し、余剰分だけを売却します。草など年間を通じて再生する作物は3か月分を確保します。MODが作物の収穫を確認するまでは次の収穫時期がわからないため、「収穫時期を学習するまでの備蓄月数」の設定が適用されます。" />
+        <text name="dr_guide_advancedRoutingRules_28" text="### 自動給水" />
+        <text name="dr_guide_advancedRoutingRules_29" text="自動給水がオンの場合、水を必要とする施設へ最寄りの水源から自動で給水します。設置された水源がない場合は最寄りの自然水域から供給します（自然水域が遠い場合は配送費用が高くなります）。" />
+
+        <text name="dr_guide_overviewTab_title" text="概要タブ" />
+        <text name="dr_guide_overviewTab_1" text="「概要」タブでは、ネットワークに含まれるすべての施設と、各施設に出入りする製品を1つの表にまとめて表示します。個別施設の設定ではなく、実際の動作状況を確認したいときに使用します。" />
+        <text name="dr_guide_overviewTab_2" text="各製品には（入力）（出力）（入力／出力）のラベルが付き、施設のどちら側に該当するか一目でわかります。サイロや倉庫は受入と供給の両方を行うため、すべてが入力／出力になります。" />
+        <text name="dr_guide_overviewTab_3" text="## 4つの選択項目" />
+        <text name="dr_guide_overviewTab_4" text="- フィルター - 指定なし（すべて表示）、施設、製品、最終製品（全工程）から選択します。" />
+        <text name="dr_guide_overviewTab_5" text="- 表示対象 - フィルターを適用する施設または製品を選択します。" />
+        <text name="dr_guide_overviewTab_6" text="- 集計期間 - 施設タブと同じく、時間・月・年から選択します。" />
+        <text name="dr_guide_overviewTab_7" text="- グループ化 - オフでは施設ごとに1行、オンでは同種の施設を合算して1行にまとめます。例：「パン屋 x2」。" />
+        <text name="dr_guide_overviewTab_8" text="この中では「最終製品（全工程）」が最も便利です。ケーキなどの完成品を選ぶと、それに材料を供給するすべての施設と中間製品が、完成品から原料へさかのぼる順番で表示されます。生産ラインのボトルネックや過剰供給を素早く見つけられます。" />
+        <text name="dr_guide_overviewTab_9" text="## 列の説明" />
+        <text name="dr_guide_overviewTab_10" text="- 受入量 - Distribution Reduxによってこの施設に配送された量。" />
+        <text name="dr_guide_overviewTab_11" text="- 積込量 - Distribution Redux以外の方法で施設に投入された量。トレーラーやベール、AI作業員、他のMODなどが該当します。" />
+        <text name="dr_guide_overviewTab_12" text="- 消費量（予測） - 消費した量。括弧内は予測値。" />
+        <text name="dr_guide_overviewTab_13" text="- 荷下ろし量 - Distribution Redux以外の方法で施設から取り出された量。自分で運び出したパレットも含みます。" />
+        <text name="dr_guide_overviewTab_14" text="- 保管量（容量） - 現在施設内にある量と容量。集計期間の影響を受けません。" />
+        <text name="dr_guide_overviewTab_15" text="- 生産量（予測） - この施設で生産された量。括弧内は予測値。" />
+        <text name="dr_guide_overviewTab_16" text="- 配送量 - 消費先へ配送された量。" />
+        <text name="dr_guide_overviewTab_17" text="- 保管／移動量 - 保管施設へ送られた量、または別の保管施設へ移動した量。" />
+        <text name="dr_guide_overviewTab_18" text="- 売却量 - 直接、または販売所を通じて売却された量。" />
+        <text name="dr_guide_overviewTab_19" text="- 配送費 - この施設からの配送にかかった運搬費です。費用は送出側の施設にのみ計上されるため、同じ配送を二重計上せず、実際に支払った金額の合計になります。" />
+        <text name="dr_guide_overviewTab_20" text="## 予測値と色の意味" />
+        <text name="dr_guide_overviewTab_21" text="「消費量」と「生産量」には、オンになっている生産ラインのレシピから算出した予測値が括弧内に表示されます。目標に達している、またはほぼ達している場合は緑、少し不足している場合はオレンジ、大幅に不足している場合は赤で表示されます。レシピがあるのは生産施設のみなので、家畜施設やサイロの行には根拠のない目標値を付けず、数値のみを表示します。" />
+        <text name="dr_guide_overviewTab_22" text="「生産量」が赤く表示されている場合、その生産ラインは材料不足の可能性が高く、すぐに見つけられます。" />
+        <text name="dr_guide_overviewTab_23" text="## 設定の表示" />
+        <text name="dr_guide_overviewTab_24" text="ページ下部のボタンで「流量を表示」と「設定を表示」を切り替えられます。生産ラインが停止している場合は「設定を表示」に切り替えると、どの設定が原因でブロックされているかをすばやく確認できます。" />
+        <text name="dr_guide_overviewTab_25" text="どちらの表示でもラインをダブルクリックすると、その施設のページへ直接移動します。" />
+
+        <text name="dr_guide_palletManagement_title" text="パレット管理" />
+        <text name="dr_guide_palletManagement_1" text="多くの製品（板材、木材、木箱入り野菜、卵、羊毛など）はパレットで搬出されます。Distribution Reduxが正しく動作するよう、パレットの仕組みを全面的に変更しました。" />
+        <text name="dr_guide_palletManagement_2" text="Distribution Reduxは、情報表示と出力モードの両方で、施設内部の保管製品とパレット生成地点にあるパレットの両方を考慮します。配送では、まずパレット生成地点の製品を使用し、その後に施設内部の保管品を使用します。パレット生成地点が塞がれている場合、製品は施設内部の保管庫に蓄積され、そこから配送されます。生成地点から手動でパレットを取り除くと、その量は施設の合計在庫から直ちに差し引かれます。" />
+        <text name="dr_guide_palletManagement_3" text="モデル内に適切なパレット設置場所がない施設（MOD製の一部の生成地点や一部の養蜂箱）では、代わりに最寄りの施設を優先する単純なルールが適用されます。" />
+        <text name="dr_guide_palletManagement_4" text="## 手動でパレットを生成する" />
+        <text name="dr_guide_palletManagement_5" text="- 出力を「内部保管」に設定します。満載パレット1個分以上が保管されると、「生産施設」タブとゲーム標準の生産画面の両方に「パレットを生成」ボタンが表示されます。押すと生成ウィンドウが開きます。" />
+        <text name="dr_guide_palletManagement_6" text="- 種類 - パレットの種類です。出力が1種類のみの場合は参考表示され、複数ある場合は矢印で選択できます。" />
+        <text name="dr_guide_palletManagement_7" text="- 数量 - 生成するパレット数です。矢印は1個ずつ、-10／+10ボタンは10個単位で変更します。生成数は保管在庫の範囲内に制限されます。" />
+        <text name="dr_guide_palletManagement_8" text="- 「生成」を押すと、指定数の満載パレットが施設のパレット地点に出現し、同量の在庫が差し引かれます。「キャンセル」では生成せずに閉じます。" />
+        <text name="dr_guide_palletManagement_9" text="このボタンは、出力が「内部保管」で、満載パレット1個分以上を保管している場合にのみ表示されます。それ未満では生成できるものがありません。また、施設モデルにパレット生成地点が必要です（パレットを扱う施設の多くには備わっています）。マルチプレイではホストが生成処理を行い、全員の画面にパレットが表示されます。" />
+        <text name="dr_guide_palletManagement_10" text="## 家畜施設からのパレット" />
+        <text name="dr_guide_palletManagement_11" text="ゲーム標準では、生産施設と異なり、家畜施設は満載に足りる量があるかどうかに関係なく、毎時間パレットを生成して内部在庫を積み込みます。動作を統一するため、初期設定では家畜施設も生産施設と同じ方式に変更されています。設定からゲーム標準の方式に戻せますが、配送や配送追跡データに影響する可能性があるため、おすすめしません。" />
+        <text name="dr_guide_palletManagement_12" text="同じ設定には、パレットを一切生成しない選択肢もあります。これを選ぶとパレットは生成されず、施設内部の保管在庫を使って配送します。" />
+
+        <text name="dr_guide_otherChangesToBaseGameMechanics_title" text="ゲーム標準の仕組みに対するその他の変更" />
+        <text name="dr_guide_otherChangesToBaseGameMechanics_1" text="## バンカーサイロ" />
+        <text name="dr_guide_otherChangesToBaseGameMechanics_2" text="- バンカーサイロを開く際は、Rキーを押すだけで覆い全体を取り除けます。取り除けない覆いの一部が残ることはありません。" />
+        <text name="dr_guide_otherChangesToBaseGameMechanics_3" text="- バンカーサイロでは、材料を投入し、覆いをかけ、発酵を待ってから覆いを外すことで製品が完成します。そのためDistribution Reduxでは出力表とオプションのみが表示され、材料の覆いを外した後に在庫が表示されます。" />
+        <text name="dr_guide_otherChangesToBaseGameMechanics_4" text="## 堆肥置き場とスラリー槽" />
+        <text name="dr_guide_otherChangesToBaseGameMechanics_5" text="- 堆肥置き場とスラリー槽をマップ上の任意の場所に設置できるようになり、家畜施設に自動接続されなくなりました。家畜施設からこれらへ材料を移すには、施設を設置し、家畜施設の出力モードで「保管」を選択してください。堆肥やスラリーは、ほかの出力と同様に移動します。" />
+        <text name="dr_guide_otherChangesToBaseGameMechanics_6" text="## サイロ拡張" />
+        <text name="dr_guide_otherChangesToBaseGameMechanics_7" text="- サイロ拡張の仕組みを大幅に変更しました。サイロ拡張は既存のサイロ、堆積場、ピットから50m以内にのみ設置でき、その施設の保管容量だけを追加します。" />
+        <text name="dr_guide_otherChangesToBaseGameMechanics_8" text="## 市場への手動搬入" />
+        <text name="dr_guide_otherChangesToBaseGameMechanics_9" text="- 自分の市場や販売所に製品を手動で荷下ろしすることもできます。ゲーム標準のように即時売却するのではなく、市場に設定された出力モードに従って処理されます。" />
+
+        <text name="dr_guide_settings_title" text="設定" />
+        <text name="dr_guide_settings_1" text="全体設定は「設定」タブにあり、セーブデータに保存され、マルチプレイではホストと同期されます。個々の施設に設定した値は、その施設について全体設定より優先されます。" />
+        <text name="dr_guide_settings_2" text="## 設定項目" />
+        <text name="dr_guide_settings_3" text="- タブに表示される順に説明します。" />
+        <text name="dr_guide_settings_4" text="- 対象範囲 - 範囲（農場全域）または近接（指定半径内）。" />
+        <text name="dr_guide_settings_5" text="- 家畜施設 - 牛舎、鶏舎、囲い、養蜂箱を対象に含めるかどうか。" />
+        <text name="dr_guide_settings_6" text="- サイロとパレット保管庫 - バルクサイロ、パレット／ベール倉庫、堆肥置き場、スラリー槽を対象に含めるかどうか。" />
+        <text name="dr_guide_settings_7" text="- 販売所とキオスク - 市場やキオスクを対象に含めるかどうか。" />
+        <text name="dr_guide_settings_8" text="- 詳細な配送設定 - 詳細入力と詳細出力の一括設定です。オフにすると「指定先へ移動」が使えなくなり、詳細設定がすべて消去されます（詳細入力・出力を参照）。" />
+        <text name="dr_guide_settings_9" text="- 近接半径 - 近接モードで供給元が届く距離。初期値は50 m。" />
+        <text name="dr_guide_settings_10" text="- 消費施設の備蓄量 - 各周期で消費施設に補充する投入材料の時間数。初期値は2時間。" />
+        <text name="dr_guide_settings_11" text="- 売却 - すべての売却を一括でオン／オフします。オフの場合、個別の出力設定にかかわらず何も売却されません。" />
+        <text name="dr_guide_settings_12" text="- 自動給水 - 水を消費する施設に自動で給水します。" />
+        <text name="dr_guide_settings_13" text="- 配送費用 - 運搬費を請求するかどうか。" />
+        <text name="dr_guide_settings_14" text="- 費用単価 - 接続1つあたりの時間単位の基本料金。初期値は10。" />
+        <text name="dr_guide_settings_15" text="- 費用距離 - 基本料金の倍率を決める距離単位。初期値は50 m。" />
+        <text name="dr_guide_settings_16" text="- 季節収穫用の備蓄 - 次の収穫まで生産に必要な量を確保し、余剰分だけ売却します。初期設定はオフ。" />
+        <text name="dr_guide_settings_17" text="- 学習前の備蓄月数 - MODが作物の収穫時期を把握するまで何か月分を確保するか。初期値は13か月。" />
+        <text name="dr_guide_settings_18" text="- 最高価格で売却 - 最高価格での売却を一括でオン／オフします。オフではすべて即時売却されます。" />
+        <text name="dr_guide_settings_19" text="- 既定の売却タイミング - 個別設定のない新しい出力に適用する方式。最高価格まで待つか、すぐに売却するかを選びます。" />
+        <text name="dr_guide_settings_20" text="- パレット生成 - 3つの選択肢があります。ゲーム標準（未満のパレットも生成）、満載パレットのみ（初期設定）、パレットを生成しない。" />
+        <text name="dr_guide_settings_21" text="- メニュー更新頻度 - UIの遅延やカクつきがある場合に調整できます。「手動」にすると、UIを更新するボタンが有効になります。" />
+        <text name="dr_guide_settings_22" text="- デバッグログ - 詳細な動作をlog.txtに記録します。ログを簡潔にするにはオフにします。" />
+
+        <text name="dr_guide_support_title" text="サポート" />
+        <text name="dr_guide_support_1" text="## トラブルシューティング" />
+        <text name="dr_guide_support_2" text="- 施設が表示されない：対象範囲とグループ設定を確認してください。近接モードでは設定半径内のみが対象です。グループがオフの施設はネットワークから除外され、タブも非表示になります。" />
+        <text name="dr_guide_support_3" text="- 何も配送されない：供給元が「保持」ではなく配送モードになっていること、消費先の生産ラインがオンであること、両施設が現在の対象範囲内にあることを確認してください。" />
+        <text name="dr_guide_support_4" text="- 「指定先へ移動」で何も移動しない：初期設定ではすべての供給先がブロックされています。「詳細出力設定」を開き、希望する供給先を有効にしてください。赤字で「有効 - 無効な設定」と表示される供給先を有効にすると、循環が発生します。" />
+        <text name="dr_guide_support_5" text="- 製品が届いたのに今の時間内に売却されない：これは仕様です。到着した製品は、消費先への供給を優先するため、1回の処理が終わるまで待機します。" />
+        <text name="dr_guide_support_6" text="- 家畜施設に卵や羊毛が保管されたままになる：「家畜施設から満載パレットを生成」がオンの場合、満載になるまで製品を蓄積してから搬出します。充填中も消費先は在庫を利用できますが、売却と保管はパレットが満載になるまで待機します。" />
+        <text name="dr_guide_support_7" text="- 工場に水が届かない：自動給水がオンなら水は自動供給されます。水不足に見える施設がある場合は設定を確認してください。" />
+        <text name="dr_guide_support_8" text="- 施設で操作案内が表示されない：左角括弧キーの案内はネットワークに含まれる施設でのみ表示されます。設定でそのグループを除外している場合、案内は表示されません。" />
+        <text name="dr_guide_support_9" text="- MODが想定どおり動作しない：同じ配送システムに干渉するため、他の配送システム変更MODと併用しないでください。ゲーム標準の施設とGIANTS標準仕様に従う施設MODに対応しますが、一部の施設MODでは動作が異なり、このMODに影響する場合があります。" />
+        <text name="dr_guide_support_10" text="## ガイドと概要" />
+        <text name="dr_guide_support_11" text="概要やガイドは、YouTubeチャンネル @AussieSimmer で公開しています。" />
+        <text name="dr_guide_support_12" text="## 不具合報告" />
+        <text name="dr_guide_support_13" text="不具合、機能追加の要望、MOD互換性に関する依頼は、GitHubリポジトリでチケットを作成してください：" />
+        <text name="dr_guide_support_14" text="https://github.com/Bones50/FS25-Distribution-Redux" />
+
+        <text name="dr_guide_changelog_title" text="変更履歴" />
+        <text name="dr_guide_changelog_1" text="## v1.1.0.0" />
+        <text name="dr_guide_changelog_2" text="1. 多数の不具合を修正（詳細はGitHubを参照）。" />
+        <text name="dr_guide_changelog_3" text="2. 多数の利便性向上機能を追加（詳細はGitHubを参照）。" />
+        <text name="dr_guide_changelog_4" text="3. 多数のMODとの互換性を追加し、全体的な互換性を向上（詳細はGitHubを参照）。" />
+        <text name="dr_guide_changelog_5" text="4. すべての施設の配送状況と設定を一か所で確認できる「概要」タブを追加（フィルター機能付き。特定の最終製品に関係するすべての供給元と生産施設を表示可能）。" />
+        <text name="dr_guide_changelog_6" text="5. 詳細入力・出力管理を追加（ブロック、優先順位、在庫確保、充填目標、受入上限）。" />
+        <text name="dr_guide_changelog_7" text="6. 保管施設間（サイロ、パレット保管庫など）で製品を移動・整理する機能を追加。" />
+        <text name="dr_guide_changelog_8" text="## v1.0.0.2" />
+        <text name="dr_guide_changelog_9" text="1. 施設名の変更：ゲーム標準の建設メニューから、配送ネットワーク内のすべての施設に任意の名前を付けられるようになりました。標準では一部の施設に限られますが、このMODではサイロ、倉庫、ピット、販売所などすべてに対応します。メニューでは設定した名前を使用し、元の施設名も下に表示するため、同じ温室が8棟ある農場でも区別できます。" />
+        <text name="dr_guide_changelog_10" text="2. 堆肥置き場／スラリー槽の製品表示を修正。互いの製品が出力に表示されていましたが、堆肥置き場には堆肥、スラリー槽にはスラリーのみが表示されます。" />
+        <text name="dr_guide_changelog_11" text="3. 堆肥置き場／スラリー槽の受入表示を修正。これまで受入製品が表示されませんでしたが、実際に搬入される堆肥とスラリーが表示されるようになりました。" />
+        <text name="dr_guide_changelog_12" text="## v1.0.0.1" />
+        <text name="dr_guide_changelog_13" text="1. スクロールバー、表の配置調整、売却額の売却列への追加など、UIを改善し表記を統一。" />
+        <text name="dr_guide_changelog_14" text="2. 販売所とキオスクを配送システムに追加。すべての施設で出力を設置済みの販売所へ送る「販売所へ供給」を選べます。市場経由で売却した製品には20%の価格ボーナスが付きますが、ゲーム標準と同様、まとめ売りでは価格が下がります。" />
+        <text name="dr_guide_changelog_15" text="3. 最高価格で売却する機能を修正。価格履歴がないと予想より早く売却されていたため、独自データが十分に蓄積されるまではゲーム内の価格グラフを使用します。" />
+        <text name="dr_guide_changelog_16" text="4. 内部保管モードとパレット手動生成を追加。パレット化できる製品を自動でパレット化せず、バルク在庫として保管できます。生成画面でパレットの種類と数量を指定して手動生成できます。「生産施設」タブとゲーム標準の生産画面から利用できます。" />
+        <text name="dr_guide_changelog_17" text="## v1.0.0.0" />
+        <text name="dr_guide_changelog_18" text="1. 製品を即時売却するか、最高価格になるまで待って売却するかを指定する機能を追加。" />
+        <text name="dr_guide_changelog_19" text="2. 配送方式を分類し、設定とヘルプガイドをメニューに統合するため、UIを全面的に再構築。" />
+        <text name="dr_guide_changelog_20" text="3. サイロ拡張を一貫して動作するよう修正。拡張施設は対応する種類のサイロの近くに設置する必要があります。配送は本体サイロで管理し、拡張施設は保管容量のみを追加します。" />
+        <text name="dr_guide_changelog_21" text="4. パレット・ベール倉庫にネットワーク内のすべての稼働中パレットを表示し、製品到着前に設定できるようにしました。次の周期の空きを確保するため、価値の低いパレットから売却する備蓄機能を追加。別の倉庫に空きがある場合は売却せず、そちらへ移動します。" />
+        <text name="dr_guide_changelog_22" text="5. パレット倉庫の操作を修正。ゲーム内で積込地点のアイコンを見ると、その施設の配送ページを直接開けます。" />
+        <text name="dr_guide_changelog_23" text="6. 配送後に供給元に少量の製品が残るタイミング上の問題を修正。" />
+        <text name="dr_guide_changelog_24" text="7. バイオガスプラントを修正。メタンと電力の売却額がゲーム難易度を反映するようになり、消化液も財務画面でバイオガスプラントの収入として正しく計上されます。" />
+        <text name="dr_guide_changelog_25" text="8. 設定を細分化し、サイロ／パレット倉庫や家畜施設を配送対象に含めるか選べるようにしました。生産施設はゲーム標準と同様、常に登録され配送に参加します。" />
+        <text name="dr_guide_changelog_26" text="9. モード名を変更。「保持」は製品を施設内に保持する方式（以前は「保管済み」）になり、「保管」は空きがある保管施設へ製品を移動する方式になりました。" />
+        <text name="dr_guide_changelog_27" text="## v0.0.0.1" />
+        <text name="dr_guide_changelog_28" text="先行リリース。" />
+
+        <!-- ============ end USER GUIDE ============ -->
+
+        <!-- the ANIMAL PANEL, drawn only when an extension registers a provider (API v4).
+             Budgets: the block labels sit in 234-480px columns at 11px, so keep them short. -->
+        <text name="dr_col_animalPanel" text="家畜・飼料・群れの価値" />
+        <text name="dr_panel_animals" text="家畜" />
+        <text name="dr_panel_health" text="健康状態" />
+        <text name="dr_panel_productivity" text="生産性" />
+        <text name="dr_panel_na" text="該当なし" />
+        <text name="dr_panel_feed" text="飼料" />
+        <text name="dr_panel_foodFactor" text="飼料係数 %s" />
+        <text name="dr_panel_grazing" text="放牧" />
+        <text name="dr_panel_noFeedData" text="飼料データなし" />
+        <text name="dr_panel_herdValue" text="群れの価値" />
+        <text name="dr_panel_ofPeak" text="最適年齢時の%sの価値" />
+        <text name="dr_panel_pastPeak" text="最適年齢を過ぎると、年齢とともに価値が低下" />
+        <!-- the profit line. Character budget: apProfitLabel is 130px at 11px, so about 20
+             characters; the four breakdown words share 740px with four money figures, so
+             keep each under about 10. -->
+        <text name="dr_panel_profit" text="推定利益／月" />
+        <text name="dr_panel_pfCleared" text="除去した場合：" />
+        <text name="dr_panel_pfOutputs" text="出力" />
+        <text name="dr_panel_pfInputs" text="入力" />
+        <text name="dr_panel_pfAgeing" text="加齢" />
+        <text name="dr_panel_pfBirths" text="出生" />
+
+        <!-- the known-problem-mod warning shown once on load -->
+        <text name="dr_modwarn_body" text="警告！現在、Distribution Reduxとの問題が確認されているMODが有効になっています。続行できますが、ゲームおよびMODの動作は保証されません。この警告を避けるには、ゲームを終了し、以下のMODを無効にしてセーブデータを再読み込みしてください：" />
+    </texts>
+</l10n>
